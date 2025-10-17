@@ -59,12 +59,20 @@ export default function Poetry() {
                         return (
                             <div key={a} className="w-1/2 pl-4 mt-4 h-fit">
                                 <div className="text-[32px] font-bold ">{each.title}</div>
-                                <div className={`text-base tracking-tighter`}>{each.content.split("<abc>").map((line, iex) => (
-                                    <span key={iex}>
-                                        {line}
-                                        <br />
-                                    </span>
-                                ))}</div>
+                                <div className={`text-base tracking-tighter`}>{each.content.split("<abc>").map((line, iex) => {
+                                    const tabMatches = line.match(/^(\[tab\])+/); // bắt mọi [tab] ở đầu dòng
+                                    const tabCount = tabMatches ? tabMatches[0].match(/\[tab\]/g)?.length  : 0;
+                                    const cleanLine = line.replace(/^(\[tab\])+/g, "");
+                                    return (
+                                        <span key={iex} style={{
+                                            display: "block",
+                                            textIndent: `${tabCount ? tabCount * 4 : 0 }em`, // Mỗi [tab] = 2em
+                                        }}>
+                                            {cleanLine.trim()}
+                                            <br />
+                                        </span>
+                                    )
+                                })}</div>
                             </div>
                         )
                     })}
